@@ -31,15 +31,19 @@ const reservationHighlights = [
 const quickActions = [
   {
     title: "Rezervasiya Üçün Zəng",
-    text: "Telefon məlumatı əlavə edildikdə birbaşa əlaqə üçün istifadə oluna bilər.",
+    text: "Seans, masa və qrup rezervasiyası üçün dərhal zəng edin.",
     buttonText: "+994 (010)-525-04-21",
     href: "tel:+994105250421",
+    icon: "fa-phone",
+    color: "from-[#F03328] to-[#FF6B35]",
   },
   {
     title: "Email ilə Əlaqə",
-    text: "Təklif, əməkdaşlıq və tədbir sorğularınızı email üzərindən göndərə bilərsiniz.",
+    text: "Təklif, əməkdaşlıq və tədbir sorğularını email ilə göndərin.",
     buttonText: "galagardencinema@gmail.com",
     href: "mailto:galagardencinema@gmail.com",
+    icon: "fa-envelope",
+    color: "from-[#FF9E0C] to-[#FFBB33]",
   },
 ];
 
@@ -58,9 +62,6 @@ function ContactUs() {
               <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mt-5">
                 Gala Cinema ilə əlaqə saxlayın.
               </h1>
-              <p className="text-sm sm:text-base leading-7 text-white/70 mt-3 max-w-lg">
-                Bu bölmədə ünvan, telefon, iş saatları və rezervasiya məlumatlarını rahatlıqla yeniləyə bilərsiniz.
-              </p>
             </div>
 
             <div className="grid gap-3">
@@ -123,16 +124,20 @@ function ContactUs() {
                   ))}
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-4 grid-cols-1">
                   {quickActions.map((item) => (
                     <a
                       key={item.title}
                       href={item.href}
-                      className="rounded-[22px] border border-[#f0e6de] bg-[#101217] p-5 text-white shadow-[0_14px_30px_rgba(16,17,19,0.12)] flex flex-col gap-3 transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(16,17,19,0.18)] no-underline"
+                      className="group relative overflow-hidden rounded-[28px] border border-transparent bg-gradient-to-br from-white/95 to-[#faf8f5] p-6 text-[#101113] shadow-[0_16px_40px_rgba(16,17,19,0.14)] flex flex-col gap-3 transition-all hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(16,17,19,0.2)] no-underline"
                     >
-                      <h3 className="text-lg font-black leading-snug">{item.title}</h3>
-                      <p className="text-sm leading-6 text-white/68">{item.text}</p>
-                      <div className="mt-auto inline-flex rounded-full bg-gradient-to-r from-[#F03328] to-[#FF9E0C] px-4 py-2.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-white shadow-[0_8px_18px_rgba(240,51,40,0.25)]">
+                      <div className={`absolute -top-8 -right-8 h-32 w-32 rounded-full bg-gradient-to-br ${item.color} opacity-10 group-hover:scale-110 transition-transform duration-500`} />
+                      <div className={`relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white shadow-[0_12px_30px_rgba(240,51,40,0.2)]`}>
+                        <i className={`fa-solid ${item.icon} text-xl`} />
+                      </div>
+                      <h3 className="text-base font-black leading-snug">{item.title}</h3>
+                      <p className="text-xs leading-5 text-[#505560]">{item.text}</p>
+                      <div className={`mt-auto inline-flex items-center justify-center rounded-full bg-gradient-to-r ${item.color} px-3 py-2.5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-white shadow-[0_10px_25px_rgba(240,51,40,0.2)] transition-all group-hover:scale-105 whitespace-nowrap`}>
                         {item.buttonText}
                       </div>
                     </a>
