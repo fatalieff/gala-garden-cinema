@@ -141,9 +141,6 @@ function Home() {
           <h2 className="mt-4 text-3xl sm:text-4xl font-black text-[#101113]">
             Kinoya gedən axşamı təcrübəyə çeviririk.
           </h2>
-          <p className="mt-4 text-base sm:text-lg leading-8 text-[#5C5F66]">
-            Saytın bu hissəsi Gala Cinema-nın açıq hava ruhunu göstərmək üçün hazırlanıb: rahatlıq, görüntü keyfiyyəti, dadlı menyu və tədbir idarəetməsi bir yerdədir.
-          </p>
           <div className="mt-6 space-y-3">
             {storyPoints.map((point) => (
               <div key={point} className="flex gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_6px_22px_rgba(15,15,20,0.05)]">
