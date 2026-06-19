@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #f03328;
+  --color-primary-dark: #d42a20;
+  --color-accent: #ff9e0c;
+  --color-accent-dark: #d58000;
+  --color-warm-bg: #fff9f5;
+  --color-warm-section: #fff5ee;
+  --color-text: #2d2d2d;
+  --color-text-muted: #666666;
+  --color-border: #f0e6de;
+  --shadow-soft: 0 4px 24px rgba(240, 51, 40, 0.06);
+  --shadow-card: 0 8px 32px rgba(45, 45, 45, 0.08);
+  --shadow-card-hover: 0 16px 40px rgba(240, 51, 40, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Nunito", sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(255, 158, 12, 0.14), transparent 28%),
+    radial-gradient(circle at 80% 8%, rgba(240, 51, 40, 0.12), transparent 24%),
+    linear-gradient(180deg, #111217 0%, #191b22 16%, #fffdfb 16%, #fff8f2 100%);
+  color: var(--color-text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes flyToCart {
+  0% {
+    left: var(--start-x);
+    top: var(--start-y);
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.6);
+    opacity: 0.8;
+  }
+  100% {
+    left: var(--target-x);
+    top: var(--target-y);
+    transform: scale(0.2);
+    opacity: 0;
+  }
+}
+
+.animate-fly {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 15px rgba(240, 51, 40, 0.3);
+  border: 2px solid white;
+  animation: flyToCart 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+::selection {
+  background: rgba(255, 158, 12, 0.25);
+  color: var(--color-text);
+}
