@@ -24,7 +24,7 @@ function Header() {
     <header className="sticky top-0 z-1100 mt-1 bg-[rgba(16,17,19,0.8)] text-white backdrop-blur-md border-b border-white/10 rounded-b-2xl lg:rounded-b-3xl px-4 py-2 sm:px-6 -mx-4 sm:-mx-5 shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
       <div className="flex justify-between items-center gap-4">
         <NavLink to="/home" className="flex gap-2 sm:gap-3 items-center shrink-0" onClick={closeMenu}>
-          <div className="w-20 sm:w-24 lg:w-32">
+          <div className="w-16 sm:w-20 md:w-24 lg:w-28">
             <img 
               src={Logo} 
               alt="Gala Garden Cinema loqosu" 

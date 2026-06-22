@@ -52,9 +52,9 @@ function ContactUs() {
     <div className="nunito relative z-[1] py-8 sm:py-10 pb-14 sm:pb-20 min-h-[50vh]">
       <div className="relative overflow-hidden rounded-[32px] border border-[#f0e6de] bg-[#111217] text-white shadow-[0_24px_70px_rgba(0,0,0,0.18)]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,158,12,0.18),transparent_28%),radial-gradient(circle_at_85%_15%,rgba(240,51,40,0.16),transparent_24%),linear-gradient(180deg,rgba(16,17,19,0.98),rgba(17,18,23,0.98))]" />
-        <div className="relative grid xl:grid-cols-[0.92fr_1.08fr]">
+        <div className="relative grid lg:grid-cols-[0.92fr_1.08fr] gap-0">
           {/* Left — info card */}
-          <div className="flex flex-col gap-5 p-6 sm:p-8 lg:p-10 border-b xl:border-b-0 xl:border-r border-white/10 bg-white/4 backdrop-blur-sm">
+          <div className="flex flex-col gap-5 p-5 sm:p-6 lg:p-10 border-b lg:border-b-0 lg:border-r border-white/10 bg-white/4 backdrop-blur-sm">
             <div>
               <span className="inline-flex rounded-full border border-white/12 bg-white/6 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.24em] text-[#ffcf87]">
                 Əlaqə və rezervasiya
@@ -102,8 +102,8 @@ function ContactUs() {
 
           {/* Right — map + contact content */}
           <div className="bg-[#fffaf6] text-[#101113] p-5 sm:p-6 lg:p-7">
-            <div className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr] items-stretch">
-              <div className="min-h-[320px] sm:min-h-[400px] rounded-[24px] overflow-hidden border border-[#f0e6de] shadow-[0_10px_34px_rgba(15,15,20,0.08)] relative z-0 isolate [&_.leaflet-container]:h-full [&_.leaflet-container]:w-full [&_.leaflet-container]:rounded-[24px]">
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-[1.08fr_0.92fr] items-stretch">
+              <div className="min-h-[280px] sm:min-h-[320px] lg:min-h-[400px] rounded-[24px] overflow-hidden border border-[#f0e6de] shadow-[0_10px_34px_rgba(15,15,20,0.08)] relative z-0 isolate [&_.leaflet-container]:h-full [&_.leaflet-container]:w-full [&_.leaflet-container]:rounded-[24px]">
                 <MapComponent />
               </div>
 

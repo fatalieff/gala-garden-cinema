@@ -114,13 +114,13 @@ const OurMenu = () => {
       </section>
 
       <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           {CATEGORY_TABS.map((tab) => (
             <button
               key={tab.value}
               type="button"
               onClick={() => setActiveTab(tab.value)}
-              className={`rounded-full px-5 py-2.5 text-sm font-bold transition-all duration-150 ${
+              className={`rounded-full px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold transition-all duration-150 ${
                 activeTab === tab.value
                   ? 'bg-[#F03328] text-white shadow-[0_12px_30px_rgba(240,51,40,0.32)]'
                   : 'border border-white/10 bg-white text-[#121214] hover:border-[#FF9E0C] hover:text-[#F03328]'
@@ -132,16 +132,16 @@ const OurMenu = () => {
         </div>
 
         {error ? (
-          <div className="mt-8 rounded-[28px] border border-red-500/30 bg-red-500/10 p-8 text-center">
-            <div className="text-4xl mb-4">⚠️</div>
-            <h3 className="text-xl font-black text-red-100 mb-3">Menyu yüklənərkən xəta baş verdi</h3>
-            <p className="text-sm text-red-200 max-w-md mx-auto">
+          <div className="mt-8 rounded-[28px] border border-red-500/30 bg-red-500/10 p-6 sm:p-8 text-center">
+            <div className="text-3xl sm:text-4xl mb-4">⚠️</div>
+            <h3 className="text-lg sm:text-xl font-black text-red-100 mb-3">Menyu yüklənərkən xəta baş verdi</h3>
+            <p className="text-xs sm:text-sm text-red-200 max-w-md mx-auto">
               Zəhmət olmasa bir az sonra yenidən yoxlayın. Əgər problem davam edirsə, bizimlə əlaqə saxlayın.
             </p>
           </div>
         ) : null}
 
-        <div className="mt-8 grid gap-5 grid-cols-[repeat(auto-fill,minmax(280px,1fr))] sm:gap-6">
+        <div className="mt-8 grid gap-4 sm:gap-5 grid-cols-[repeat(auto-fill,minmax(240px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] lg:gap-6">
           {loading ? (
             Array.from({ length: 6 }).map((_, index) => <MenuCardSkeleton key={index} />)
           ) : filteredMeals.length === 0 ? (
