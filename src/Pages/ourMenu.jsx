@@ -215,6 +215,8 @@ const OurMenu = () => {
       </section>
 
       <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        
+
         <div className="flex flex-wrap gap-2 sm:gap-3">
           {CATEGORY_TABS.map((tab) => (
             <button
@@ -243,51 +245,7 @@ const OurMenu = () => {
         ) : null}
 
         <div className="mt-8 grid gap-3 md:gap-4 lg:gap-4 lg:grid-cols-[1.1fr_0.85fr]">
-          <div>
-            <div className="grid gap-3 sm:gap-4 md:gap-5 grid-cols-[repeat(auto-fill,minmax(160px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(220px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] lg:gap-6">
-              {loading ? (
-                Array.from({ length: 6 }).map((_, index) => <MenuCardSkeleton key={index} />)
-              ) : filteredMeals.length === 0 ? (
-                <div className="col-span-full rounded-[28px] border border-dashed border-white/15 bg-white/6 p-10 text-center text-white/70">
-                  Bu filtr üçün hələ yemək yoxdur.
-                </div>
-              ) : (
-                filteredMeals.map((meal) => (
-                  <article key={meal.id} className="group overflow-hidden rounded-[28px] border border-white/10 bg-[#111217] shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition-transform duration-200 hover:-translate-y-1">
-                    <div className="relative aspect-4/3 overflow-hidden bg-[#191a1f]">
-                      <img
-                        src={meal.image_url || FALLBACK_IMAGE}
-                        alt={meal.name}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />
-                    </div>
-
-                    <div className="p-5 sm:p-6">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="min-w-0">
-                          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#ffcf87]">{meal.category}</p>
-                          <h2 className="mt-1 truncate text-xl font-black text-white">{meal.name}</h2>
-                        </div>
-                        <div className="shrink-0 rounded-full bg-[#fff6ea] px-3 py-1.5 text-sm font-black text-[#1f7a34] shadow-[0_10px_20px_rgba(31,122,52,0.16)]">
-                          {formatPrice(meal.price)}
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => addToBasket(meal)}
-                        className="mt-5 inline-flex w-full items-center justify-center rounded-3xl border border-white/10 bg-[#F03328] px-4 py-3 text-sm font-bold text-white transition-all duration-150 hover:bg-[#ff7b47]"
-                      >
-                        Səbətə əlavə et
-                      </button>
-                    </div>
-                  </article>
-                ))
-              )}
-            </div>
-          </div>
-
-          <aside className="space-y-3 md:space-y-4 lg:sticky lg:top-8 lg:max-h-[calc(100vh-100px)] lg:overflow-y-auto">
+          <aside className="order-first lg:order-0 space-y-3 md:space-y-4 lg:sticky lg:top-8 lg:max-h-[calc(100vh-100px)] lg:overflow-y-auto">
             <div className="rounded-[28px] border border-white/10 bg-[#111217] p-4 sm:p-6 shadow-[0_18px_50px_rgba(0,0,0,0.22)]">
               <div className="flex items-start justify-between gap-2 sm:gap-3">
                 <div>
@@ -332,7 +290,7 @@ const OurMenu = () => {
                           >
                             -
                           </button>
-                          <span className="min-w-[24px] sm:min-w-[38px] text-center text-xs sm:text-sm font-bold text-white">{item.quantity}</span>
+                          <span className="min-w-6 sm:min-w-10 text-center text-xs sm:text-sm font-bold text-white">{item.quantity}</span>
                           <button
                             type="button"
                             onClick={() => changeBasketQuantity(item.id, 1)}
@@ -401,6 +359,50 @@ const OurMenu = () => {
               ) : null}
             </div>
           </aside>
+
+          <div className="order-last lg:order-0">
+            <div className="grid gap-3 sm:gap-4 md:gap-5 grid-cols-[repeat(auto-fill,minmax(160px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(220px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] lg:gap-6">
+              {loading ? (
+                Array.from({ length: 6 }).map((_, index) => <MenuCardSkeleton key={index} />)
+              ) : filteredMeals.length === 0 ? (
+                <div className="col-span-full rounded-[28px] border border-dashed border-white/15 bg-white/6 p-10 text-center text-white/70">
+                  Bu filtr üçün hələ yemək yoxdur.
+                </div>
+              ) : (
+                filteredMeals.map((meal) => (
+                  <article key={meal.id} className="group overflow-hidden rounded-[28px] border border-white/10 bg-[#111217] shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition-transform duration-200 hover:-translate-y-1">
+                    <div className="relative aspect-4/3 overflow-hidden bg-[#191a1f]">
+                      <img
+                        src={meal.image_url || FALLBACK_IMAGE}
+                        alt={meal.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />
+                    </div>
+
+                    <div className="p-5 sm:p-6">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="min-w-0">
+                          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#ffcf87]">{meal.category}</p>
+                          <h2 className="mt-1 truncate text-xl font-black text-white">{meal.name}</h2>
+                        </div>
+                        <div className="shrink-0 rounded-full bg-[#fff6ea] px-3 py-1.5 text-sm font-black text-[#1f7a34] shadow-[0_10px_20px_rgba(31,122,52,0.16)]">
+                          {formatPrice(meal.price)}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => addToBasket(meal)}
+                        className="mt-5 inline-flex w-full items-center justify-center rounded-3xl border border-white/10 bg-[#F03328] px-4 py-3 text-sm font-bold text-white transition-all duration-150 hover:bg-[#ff7b47]"
+                      >
+                        Səbətə əlavə et
+                      </button>
+                    </div>
+                  </article>
+                ))
+              )}
+            </div>
+          </div>
         </div>
       </main>
     </div>
