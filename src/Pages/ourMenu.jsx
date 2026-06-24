@@ -60,6 +60,8 @@ const OurMenu = () => {
   const [orderSending, setOrderSending] = useState(false);
   const [orderMessage, setOrderMessage] = useState('');
   const [orderError, setOrderError] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmChecked, setConfirmChecked] = useState(false);
 
   const basketTotal = useMemo(
     () => basketItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
@@ -146,9 +148,7 @@ const OurMenu = () => {
     return `${header}${lines.join('\n')}${footer}`;
   };
 
-  const handleSubmitOrder = async () => {
-    if (orderSending) return;
-
+  const openConfirmModal = () => {
     if (!customerName.trim() || !customerPhone.trim()) {
       setOrderError('Zəhmət olmasa, sifarişi tamamlamaq üçün adınızı və telefon nömrənizi qeyd edin!');
       return;
@@ -159,6 +159,21 @@ const OurMenu = () => {
       return;
     }
 
+    setOrderError('');
+    setOrderMessage('');
+    setConfirmChecked(false);
+    setShowConfirmModal(true);
+  };
+
+  const handleSubmitOrder = async () => {
+    if (orderSending) return;
+
+    if (!confirmChecked) {
+      setOrderError('Zəhmət olmasa, sifarişi göndərmədən əvvəl təsdiqləyin.');
+      return;
+    }
+
+    setShowConfirmModal(false);
     setOrderSending(true);
     setOrderError('');
     setOrderMessage('');
@@ -184,6 +199,7 @@ const OurMenu = () => {
       setBasketItems([]);
       setCustomerName('');
       setCustomerPhone('');
+      setConfirmChecked(false);
       setOrderMessage('Sifarişiniz uğurla alındı! Tezlkliklə sizinlə əlaqə saxlanılacaq.');
     } catch (err) {
       console.error('Telegram göndərmə xətası:', err);
@@ -338,7 +354,7 @@ const OurMenu = () => {
                 </div>
                 <button
                   type="button"
-                  onClick={handleSubmitOrder}
+                  onClick={openConfirmModal}
                   disabled={basketItems.length === 0 || orderSending || !customerName.trim() || !customerPhone.trim()}
                   className="mt-4 sm:mt-6 inline-flex w-full items-center justify-center rounded-2xl sm:rounded-3xl bg-[#F03328] px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-bold text-white transition-all duration-150 disabled:cursor-not-allowed disabled:bg-[#b15c4d]"
                 >
@@ -405,6 +421,50 @@ const OurMenu = () => {
           </div>
         </div>
       </main>
+
+      {showConfirmModal ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+          <div className="w-full max-w-md rounded-[28px] border border-white/10 bg-[#111217] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.35)] sm:p-6">
+            <p className="text-xs uppercase tracking-[0.24em] text-[#ffcf87]">Confirmation</p>
+            <h3 className="mt-2 text-xl font-black text-white">Sifarişi göndərməyə əminsiniz?</h3>
+            <p className="mt-3 text-sm leading-6 text-white/70">
+              Göndərdiyiniz sifariş birbaşa restorana ötürüləcək. Davam etmək üçün aşağıdakı xanaya işarələyin.
+            </p>
+
+            <label className="mt-5 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 text-sm text-white/80">
+              <input
+                type="checkbox"
+                checked={confirmChecked}
+                onChange={(event) => setConfirmChecked(event.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent text-[#F03328] focus:ring-[#F03328]"
+              />
+              <span>Bəli, sifarişi göndərməyə əminəm.</span>
+            </label>
+
+            <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowConfirmModal(false);
+                  setConfirmChecked(false);
+                  setOrderError('');
+                }}
+                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white/80 transition hover:bg-white/10"
+              >
+                İmtina
+              </button>
+              <button
+                type="button"
+                onClick={handleSubmitOrder}
+                disabled={!confirmChecked || orderSending}
+                className="rounded-2xl bg-[#F03328] px-4 py-2.5 text-sm font-bold text-white transition-all duration-150 disabled:cursor-not-allowed disabled:bg-[#b15c4d]"
+              >
+                {orderSending ? 'Göndərilir...' : 'Sifarişi göndər'}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };
