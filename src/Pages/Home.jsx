@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { supabase } from "../supabaseClient";
 
 const heroStats = [
   { value: "20+", label: "açıq hava oturacağı" },
@@ -25,7 +27,89 @@ const storyPoints = [
   "Gün batımı və gecə seansları üçün ideal açıq hava məkanı.",
 ];
 
+const FALLBACK_SHOWCASE = {
+  title: "Gün batımı seansı",
+  startTime: "21:00",
+  description: "Aydın və keyfiyyətli görüntü, immersiv səs.",
+  trailerUrl: "",
+  features: [],
+};
+
+const normalizeText = (value) => String(value ?? "").trim();
+
+const getEmbedUrl = (value) => {
+  const url = normalizeText(value);
+  if (!url) return "";
+
+  const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  if (youtubeMatch) {
+    return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+  }
+
+  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeoMatch) {
+    return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+  }
+
+  return url;
+};
+
+const isDirectVideoUrl = (value) => {
+  const url = normalizeText(value);
+  if (!url) return false;
+
+  return /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url) || url.includes("storage/v1/object/public") || url.includes("storage/v1/object/");
+};
+
 function Home() {
+  const [showcase, setShowcase] = useState(FALLBACK_SHOWCASE);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadShowcase = async () => {
+      const tables = ["home_content", "homepage", "events", "cinema_events", "shows"];
+
+      for (const table of tables) {
+        try {
+          const { data, error } = await supabase
+            .from(table)
+            .select("*")
+            .order("id", { ascending: false })
+            .limit(1);
+
+          if (!error && Array.isArray(data) && data.length > 0) {
+            const record = data[0];
+            const nextShowcase = {
+              ...FALLBACK_SHOWCASE,
+              title: normalizeText(record.title || record.name || record.event_title || record.session_title) || FALLBACK_SHOWCASE.title,
+              startTime: normalizeText(record.start_time || record.time || record.startTime || record.starts_at) || FALLBACK_SHOWCASE.startTime,
+              description: normalizeText(record.description || record.summary || record.subtitle || record.text) || FALLBACK_SHOWCASE.description,
+              trailerUrl: normalizeText(record.trailer_url || record.trailerUrl || record.video_url || record.videoUrl || record.trailer || record.video) || "",
+            };
+
+            if (isMounted) {
+              setShowcase(nextShowcase);
+            }
+            break;
+          }
+        } catch (err) {
+          console.error(`Supabase query failed for ${table}:`, err);
+        }
+      }
+
+    };
+
+    loadShowcase();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const trailerEmbedUrl = getEmbedUrl(showcase.trailerUrl);
+  const showDirectVideo = isDirectVideoUrl(showcase.trailerUrl);
+
   return (
     <div className="space-y-14 sm:space-y-16 lg:space-y-20 pb-6 sm:pb-10">
       <section className="relative overflow-hidden rounded-4xl bg-[#0c0c10] text-white shadow-[0_24px_80px_rgba(0,0,0,0.28)] border border-white/10">
@@ -73,46 +157,54 @@ function Home() {
 
           <div className="relative flex items-center justify-center">
             <div className="absolute inset-[12%_10%_10%_10%] rounded-full bg-[radial-gradient(circle,rgba(255,158,12,0.26)_0%,transparent_68%)] blur-2xl" />
-            <div className="relative w-full max-w-md rounded-[28px] border border-white/12 bg-white/8 p-5 sm:p-6 backdrop-blur-md shadow-[0_18px_60px_rgba(0,0,0,0.28)]">
-              <div className="rounded-[22px] bg-[#101113] p-4 sm:p-5 border border-white/10">
-                <div className="rounded-[18px] bg-linear-to-br from-[#fefefe] to-[#efe7dc] p-6 sm:p-7 text-[#101113] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.4)]">
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.24em] text-[#F03328] font-bold">Bu axşam</p>
-                      <h2 className="mt-1 text-2xl font-black">Gün batımı seansı</h2>
-                    </div>
-                    <div className="rounded-2xl bg-[#0f1014] px-3 py-2 text-right text-white">
-                      <div className="text-[10px] uppercase tracking-[0.22em] text-white/60">Başlanır</div>
-                      <div className="text-lg font-black">21:00</div>
-                    </div>
+            <div className="relative w-full max-w-md rounded-4xl border border-white/10 bg-[#0f1014]/85 p-3 sm:p-4 shadow-[0_24px_80px_rgba(0,0,0,0.34)] backdrop-blur-xl">
+              <div className="rounded-[26px] border border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(244,237,226,0.96))] p-4 sm:p-5 text-[#111217] shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#F03328]">Bu axşam</p>
+                    <h2 className="mt-2 text-2xl font-black leading-tight">{showcase.title}</h2>
                   </div>
-
-                  <div className="mt-5 space-y-4">
-                    {[
-                      ["Böyük ekran", "Aydın və keyfiyyətli görüntü, immersiv səs", "fa-clapperboard"],
-                      ["Lounge oturacaq", "Rahat kreslolar və sakit atmosfer", "fa-couch"],
-                    ].map(([title, text, icon]) => (
-                      <div key={title} className="flex items-start gap-4 rounded-[22px] bg-white px-5 py-4 shadow-[0_10px_28px_rgba(15,15,20,0.07)]">
-                        <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#F03328] to-[#FF9E0C] text-base text-white shadow-[0_10px_20px_rgba(240,51,40,0.18)]">
-                          <i className={`fa-solid ${icon}`} />
-                        </div>
-                        <div>
-                          <div className="text-[15px] font-black text-[#111217]">{title}</div>
-                          <div className="mt-1 text-[15px] leading-6 text-[#5C5F66]">{text}</div>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="rounded-2xl bg-[#0f1014] px-3 py-2 text-right text-white shadow-[0_10px_24px_rgba(15,15,20,0.2)]">
+                    <div className="text-[10px] uppercase tracking-[0.22em] text-white/60">Başlanır</div>
+                    <div className="text-lg font-black">{showcase.startTime}</div>
                   </div>
                 </div>
+
+                {trailerEmbedUrl ? (
+                  <div className="mt-5 overflow-hidden rounded-[22px] border border-black/10 bg-black shadow-[0_16px_40px_rgba(0,0,0,0.18)]">
+                    <div className="aspect-video">
+                      {showDirectVideo ? (
+                        <video
+                          controls
+                          playsInline
+                          preload="metadata"
+                          className="h-full w-full object-cover"
+                          src={trailerEmbedUrl}
+                        />
+                      ) : (
+                        <iframe
+                          src={trailerEmbedUrl}
+                          title={showcase.title}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                          className="h-full w-full"
+                        />
+                      )}
+                    </div>
+                  </div>
+                ) : null}
+
+                <p className="mt-4 text-sm leading-6 text-[#5C5F66]">{showcase.description}</p>
+
               </div>
 
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                <div className="rounded-2xl border border-white/10 bg-white/8 p-4">
-                  <div className="text-xs uppercase tracking-[0.18em] text-white/55">Məkan</div>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-[20px] border border-white/10 bg-white/8 p-4">
+                  <div className="text-[10px] uppercase tracking-[0.2em] text-white/55">Məkan</div>
                   <div className="mt-1 text-sm font-bold text-white">Açıq hava kinoteatrı</div>
                 </div>
-                <div className="rounded-2xl border border-white/10 bg-white/8 p-4">
-                  <div className="text-xs uppercase tracking-[0.18em] text-white/55">Ab-hava</div>
+                <div className="rounded-[20px] border border-white/10 bg-white/8 p-4">
+                  <div className="text-[10px] uppercase tracking-[0.2em] text-white/55">Ab-hava</div>
                   <div className="mt-1 text-sm font-bold text-white">İsti, kinoya uyğun, sosial</div>
                 </div>
               </div>
